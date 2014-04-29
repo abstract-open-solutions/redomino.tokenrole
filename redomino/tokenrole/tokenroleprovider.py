@@ -43,11 +43,7 @@ class TokenRolesAnnotateAdapter(object):
     @apply
     def token_dict():
         def get(self):
-            token_dict = self.annotations.get('token_dict', None)
-            if not token_dict:
-                token_dict = self.annotations['token_dict'] = PersistentDict()
-            return token_dict
-
+            return self.annotations.get('token_dict', {})
         def set(self, value):
             self.annotations['token_dict'] = value
         return property(get, set)
@@ -60,6 +56,12 @@ class TokenInfoSchema(object):
     def __init__(self, context):
         self.context = context
         self.annotation = ITokenRolesAnnotate(self.context)
+
+    def setter(self, name, value):
+        if not self.annotation.token_dict:
+            self.annotation.token_dict = PersistentDict()
+        token_id = self.annotation.token_dict.setdefault(self.token_id, PersistentDict())
+        token_id[name] = value
 
     @apply
     def token_id():
@@ -76,9 +78,7 @@ class TokenInfoSchema(object):
             return self.annotation.token_dict.get(self.token_id, {}).get('token_end')
 
         def setter(self, value):
-            if self.token_id not in self.annotation.token_dict:
-                self.annotation.token_dict[self.token_id] = PersistentDict()
-            self.annotation.token_dict[self.token_id]['token_end'] = value
+            self.setter('token_end', value)
         return property(getter, setter)
 
     @apply
@@ -87,9 +87,7 @@ class TokenInfoSchema(object):
             return self.annotation.token_dict.get(self.token_id, {}).get('token_roles')
 
         def setter(self, value):
-            if self.token_id not in self.annotation.token_dict:
-                self.annotation.token_dict[self.token_id] = PersistentDict()
-            self.annotation.token_dict[self.token_id]['token_roles'] = value
+            self.setter('token_roles', value)
         return property(getter, setter)
 
 
