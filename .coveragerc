@@ -1,6 +1,6 @@
 [report]
 include =
-    src/redomino/*
+    redomino/*
 omit =
     */test*
     */upgrades/*
