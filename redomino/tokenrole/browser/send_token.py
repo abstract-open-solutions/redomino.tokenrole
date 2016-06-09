@@ -47,10 +47,10 @@ class TokenSendForm(form.Form):
     label = _('label_send_form', default=u'Send token form')
     successMessage = _('data_saved', default='Data successfully updated.')
     noChangesMessage = _('no_changes', default='No changes were applied.')
-    
+
     # Defining the fields. You can add fields together.
-    fields = field.Fields(TextLine(__name__='token_display', 
-                                   title=ITokenSendForm['token_id'].title, 
+    fields = field.Fields(TextLine(__name__='token_display',
+                                   title=ITokenSendForm['token_id'].title,
                                    description=ITokenSendForm['token_id'].description)) + field.Fields(ITokenSendForm)
     fields['token_id'].mode = HIDDEN_MODE
     fields['token_display'].mode = DISPLAY_MODE
@@ -86,8 +86,8 @@ class TokenSendForm(form.Form):
     def send_mail(self, data):
         # Collect mail settings
         context = self.getContent()
-#        message = _('token_message_text', default="""${text}s<br/>Date: ${date}s<br/>Url: <a href="${url}s">Access<a/> """)
-#        message = context.utranslate(message)
+        #        message = _('token_message_text', default="""${text}s<br/>Date: ${date}s<br/>Url: <a href="${url}s">Access<a/> """)
+        #        message = context.utranslate(message)
         portal = getMultiAdapter((context, self.request), name="plone_portal_state").portal()
         mailhost = getToolByName(context, 'MailHost')
 
@@ -99,14 +99,13 @@ class TokenSendForm(form.Form):
 
         email_charset = portal.getProperty('email_charset')
         from_address = portal.getProperty('email_from_address')
-        
-#        tr_annotate = ITokenRolesAnnotate(context)
-#        end_date = context.toLocalizedTime(tr_annotate.token_dict[token_id]['token_end'])
+
+        #        tr_annotate = ITokenRolesAnnotate(context)
+        #        end_date = context.toLocalizedTime(tr_annotate.token_dict[token_id]['token_end'])
         util = getToolByName(self.context, 'translation_service')
-        end_date = util.ulocalized_time(time.time(), long_format = None, time_only = None, context = self.context, domain='plonelocales')
+        end_date = util.ulocalized_time(time.time(), long_format=None, time_only=None, context=self.context, domain='plonelocales')
 
-
-#        message = message.replace('${text}s', text)
+        #        message = message.replace('${text}s', text)
         message = text.replace('${date}s', str(end_date))
         message = message.replace('${url}s', url)
 
@@ -125,5 +124,3 @@ class TokenSendForm(form.Form):
 
 # wrap the form with plone.app.z3cform's Form wrapper
 TokenSendFormView = layout.wrap_form(TokenSendForm)
-
-

@@ -8,8 +8,8 @@ tokenroleMessageFactory = MessageFactory(PROJECTNAME)
 
 from redomino.tokenrole.plugins import tokenrole
 
-
 registerMultiPlugin(tokenrole.TokenRole.meta_type)
+
 
 def initialize(context):
     context.registerClass(tokenrole.TokenRole,

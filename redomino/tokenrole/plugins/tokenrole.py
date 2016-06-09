@@ -14,7 +14,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
 
-
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -24,19 +23,17 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 # from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
 from Products.PluggableAuthService.interfaces.plugins import IExtractionPlugin
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
-
 # try:
 #     set
 # except NameError:
 #     # Python 2.3
 #     from sets import Set as set
-    
 
 manage_addTokenRoleForm = PageTemplateFile(
     'www/tokenRoleAdd', globals(), __name__='manage_addTokenRoleForm')
 
 
-def addTokenRole( dispatcher
+def addTokenRole(dispatcher
                , id
                , title=None
                , REQUEST=None
@@ -46,10 +43,10 @@ def addTokenRole( dispatcher
     dispatcher._setObject(sp.getId(), sp)
 
     if REQUEST is not None:
-        REQUEST['RESPONSE'].redirect( '%s/manage_workspace'
+        REQUEST['RESPONSE'].redirect('%s/manage_workspace'
                                       '?manage_tabs_message='
                                       'TokenRole+added.'
-                                    % dispatcher.absolute_url() )
+                                    % dispatcher.absolute_url())
 
 
 class TokenRole(BasePlugin):
@@ -67,11 +64,12 @@ class TokenRole(BasePlugin):
     def __init__(self, id, title=None):
         self._setId(id)
         self.title = title
-    
+
     #
     # IExtractionPlugin
     #
     security.declarePrivate('extractCredentials')
+
     def extractCredentials(self, request):
         # Avoid creating anon user if this is a regular user
         # We actually have to poke request ourselves to avoid users from
@@ -88,15 +86,16 @@ class TokenRole(BasePlugin):
                         set_anon_user = False
                 except:
                     pass
-            
+
             return dict(TokenRole=True, SetAnonymousUser=set_anon_user)
-        
+
         return {}
 
-    # 
+    #
     # IAuthenticationPlugin
-    # 
+    #
     security.declarePrivate('authenticateCredentials')
+
     def authenticateCredentials(self, credentials):
         if credentials.has_key('login'):
             if credentials.get('login'):
@@ -106,12 +105,10 @@ class TokenRole(BasePlugin):
             return None
         if credentials.get('SetAnonymousUser', None):
             return ('Anonymous User', 'Anonymous User')
-        
-        return None
-    
- 
 
-classImplements( TokenRole
+        return None
+ 
+classImplements(TokenRole
                , IExtractionPlugin
                , IAuthenticationPlugin
                )

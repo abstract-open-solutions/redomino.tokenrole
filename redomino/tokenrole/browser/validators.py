@@ -22,12 +22,13 @@ from z3c.form import validator
 
 from redomino.tokenrole.interfaces import ITokenInfoSchema
 
+
 class SampleValidator(validator.SimpleFieldValidator):
-    
+
     def validate(self, value):
         super(SampleValidator, self).validate(value)
 
         if value < datetime.datetime.now():
             raise Invalid('Date not valid')
-        
-validator.WidgetValidatorDiscriminators(SampleValidator, field=ITokenInfoSchema['token_end'],)
+
+validator.WidgetValidatorDiscriminators(SampleValidator, field=ITokenInfoSchema['token_end'], )

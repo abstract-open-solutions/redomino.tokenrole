@@ -32,13 +32,14 @@ from redomino.tokenrole.interfaces import ITokenRolesProviding
 
 ANNOTATIONS_KEY = 'redomino.tokenrole.tokenrole_annotations'
 
+
 class TokenRolesAnnotateAdapter(object):
     implements(ITokenRolesAnnotate)
 
     def __init__(self, context):
         self.annotations = IAnnotations(context).setdefault(ANNOTATIONS_KEY,
                                                            PersistentDict())
-    
+
     @apply
     def token_dict():
         def get(self):
@@ -46,6 +47,7 @@ class TokenRolesAnnotateAdapter(object):
             if not token_dict:
                 token_dict = self.annotations['token_dict'] = PersistentDict()
             return token_dict
+
         def set(self, value):
             self.annotations['token_dict'] = value
         return property(get, set)
@@ -63,6 +65,7 @@ class TokenInfoSchema(object):
     def token_id():
         def getter(self):
             return self.context.REQUEST.get('form.widgets.token_id')
+
         def setter(self, value):
             pass
         return property(getter, setter)
@@ -71,6 +74,7 @@ class TokenInfoSchema(object):
     def token_end():
         def getter(self):
             return self.annotation.token_dict.get(self.token_id, {}).get('token_end')
+
         def setter(self, value):
             if not self.token_id in self.annotation.token_dict:
                 self.annotation.token_dict[self.token_id] = PersistentDict()
@@ -81,6 +85,7 @@ class TokenInfoSchema(object):
     def token_roles():
         def getter(self):
             return self.annotation.token_dict.get(self.token_id, {}).get('token_roles')
+
         def setter(self, value):
             if not self.token_id in self.annotation.token_dict:
                 self.annotation.token_dict[self.token_id] = PersistentDict()
@@ -88,8 +93,6 @@ class TokenInfoSchema(object):
         return property(getter, setter)
 
         
-        
-
 class TokenRolesLocalRolesProviderAdapter(object):
     implements(ILocalRoleProvider)
 
@@ -108,15 +111,15 @@ class TokenRolesLocalRolesProviderAdapter(object):
         tr_annotate = ITokenRolesAnnotate(self.context, None)
         if tr_annotate and tr_annotate.token_dict.has_key(token):
             expire_date = tr_annotate.token_dict[token].get('token_end')
-            roles_to_assign = tr_annotate.token_dict[token].get('token_roles', ('Reader',))
+            roles_to_assign = tr_annotate.token_dict[token].get('token_roles', ('Reader', ))
             if expire_date.replace(tzinfo=None) > datetime.now():
                 if not request.cookies.has_key('token'):
                     physical_path = self.context.getPhysicalPath()
                     # Is there a better method for calculate the url_path?
                     url_path = '/' + '/'.join(request.physicalPathToVirtualPath(physical_path))
-                    response.setCookie(name='token', 
-                                       value=token, 
-                                       expires=dt2DT(expire_date).toZone('GMT').rfc822(), 
+                    response.setCookie(name='token',
+                                       value=token,
+                                       expires=dt2DT(expire_date).toZone('GMT').rfc822(),
                                        path=url_path)
                 return roles_to_assign
         return ()
@@ -125,4 +128,3 @@ class TokenRolesLocalRolesProviderAdapter(object):
         """Returns all the local roles assigned in this context:
         (principal_id, [role1, role2])"""
         return ()
-

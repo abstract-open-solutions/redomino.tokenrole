@@ -38,11 +38,8 @@ class ItemsVocab(object):
         terms = [SimpleTerm(value, token, translate(title, domain="plone", context=request, default=default)) for value, token, title, default in self.terms]
         return SimpleVocabulary(terms)
 
-
-RolesFactory = ItemsVocab([('Reader', 'Reader', 'title_can_view', u'Can view'), 
-                           ('Reviewer', 'Reviewer', 'title_can_review', u'Can review'), 
+RolesFactory = ItemsVocab([('Reader', 'Reader', 'title_can_view', u'Can view'),
+                           ('Reviewer', 'Reviewer', 'title_can_review', u'Can review'),
                            ('Editor', 'Editor', 'title_can_edit', u'Can edit'),
                           ]
                          )
-
-

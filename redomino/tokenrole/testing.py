@@ -15,7 +15,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
 
-from plone.app.testing import PloneSandboxLayer 
+from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
@@ -27,8 +27,9 @@ from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import login
 from plone.app.testing import setRoles
 
+
 class RedominoPolicy(PloneSandboxLayer):
-    defaultBases = (PLONE_FIXTURE,)
+    defaultBases = (PLONE_FIXTURE, )
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
@@ -43,16 +44,13 @@ class RedominoPolicy(PloneSandboxLayer):
 
         setRoles(portal, TEST_USER_ID, ['Manager'])
         login(portal, TEST_USER_NAME)
-
         # do something here!
 
         setRoles(portal, TEST_USER_ID, ['Member'])
 
-
 REDOMINO_TOKENROLE_FIXTURE = RedominoPolicy()
 REDOMINO_TOKENROLE_INTEGRATION_TESTING = IntegrationTesting(
-                  bases=(REDOMINO_TOKENROLE_FIXTURE,), 
+                  bases=(REDOMINO_TOKENROLE_FIXTURE, ),
                   name="RedominoTokenrole:Integration")
 REDOMINO_TOKENROLE_FUNCTIONAL_TESTING = FunctionalTesting(
-        bases=(REDOMINO_TOKENROLE_FIXTURE,), name="RedominoTokenrole:Functional")
-
+        bases=(REDOMINO_TOKENROLE_FIXTURE, ), name="RedominoTokenrole:Functional")

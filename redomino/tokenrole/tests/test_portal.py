@@ -17,6 +17,7 @@
 import unittest2 as unittest
 from redomino.tokenrole.testing import REDOMINO_TOKENROLE_INTEGRATION_TESTING
 
+
 class TestPortal(unittest.TestCase):
     """ Maps settings """
     layer = REDOMINO_TOKENROLE_INTEGRATION_TESTING
@@ -37,5 +38,3 @@ class TestPortal(unittest.TestCase):
         portal = self.layer['portal']
         portal_actions = portal.portal_actions
         self.assertTrue('manage_tokenrole' in portal_actions.object.objectIds())
-
-

@@ -21,10 +21,10 @@ from plone.testing import layered
 
 from redomino.tokenrole.testing import REDOMINO_TOKENROLE_FUNCTIONAL_TESTING
 
+
 def test_suite():
     suite = unittest.TestSuite()
-
-#    readme = layered(doctest.DocFileSuite('../README.txt'), layer=REDOMINO_TOKENROLE_FUNCTIONAL_TESTING)
+    #    readme = layered(doctest.DocFileSuite('../README.txt'), layer=REDOMINO_TOKENROLE_FUNCTIONAL_TESTING)
 
     suite.addTests([
 #              readme,

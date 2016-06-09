@@ -25,10 +25,11 @@ try:
 except:
     _v_network = str(random() * 100000000000000000L)
 
+
 def make_uuid(*args):
-    
+
     t = str(time() * 1000L)
-    r = str(random()*100000000000000000L)
+    r = str(random() * 100000000000000000L)
     data = t + SEP + r + SEP + _v_network + SEP + str(args)
     uid = md5(data).hexdigest()
     return uid
