@@ -20,7 +20,6 @@ from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import FunctionalTesting
-from zope.configuration import xmlconfig
 
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
@@ -34,9 +33,7 @@ class RedominoPolicy(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
         # Load ZCML
         import redomino.tokenrole
-        xmlconfig.file('configure.zcml',
-                       redomino.tokenrole,
-                       context=configurationContext)
+        self.loadZCML(package=redomino.tokenrole)
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'redomino.tokenrole:default')
