@@ -36,8 +36,7 @@ class RedominoPolicy(PloneSandboxLayer):
         import redomino.tokenrole
         xmlconfig.file('configure.zcml',
                        redomino.tokenrole,
-                       context=configurationContext
-                      )
+                       context=configurationContext)
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'redomino.tokenrole:default')
@@ -50,7 +49,6 @@ class RedominoPolicy(PloneSandboxLayer):
 
 REDOMINO_TOKENROLE_FIXTURE = RedominoPolicy()
 REDOMINO_TOKENROLE_INTEGRATION_TESTING = IntegrationTesting(
-                  bases=(REDOMINO_TOKENROLE_FIXTURE, ),
-                  name="RedominoTokenrole:Integration")
+    bases=(REDOMINO_TOKENROLE_FIXTURE, ), name="RedominoTokenrole:Integration")
 REDOMINO_TOKENROLE_FUNCTIONAL_TESTING = FunctionalTesting(
-        bases=(REDOMINO_TOKENROLE_FIXTURE, ), name="RedominoTokenrole:Functional")
+    bases=(REDOMINO_TOKENROLE_FIXTURE, ), name="RedominoTokenrole:Functional")

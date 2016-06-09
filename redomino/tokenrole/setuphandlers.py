@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2010 Redomino srl (http://redomino.com)
 #
 # This program is free software; you can redistribute it and/or modify

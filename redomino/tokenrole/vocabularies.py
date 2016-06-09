@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2011 Redomino srl (http://redomino.com)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -40,6 +41,4 @@ class ItemsVocab(object):
 
 RolesFactory = ItemsVocab([('Reader', 'Reader', 'title_can_view', u'Can view'),
                            ('Reviewer', 'Reviewer', 'title_can_review', u'Can review'),
-                           ('Editor', 'Editor', 'title_can_edit', u'Can edit'),
-                          ]
-                         )
+                           ('Editor', 'Editor', 'title_can_edit', u'Can edit'), ])

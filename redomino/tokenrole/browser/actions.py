@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2011 Redomino srl (http://redomino.com)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -37,11 +38,12 @@ class CancelActions(button.ButtonActions):
 
 
 class AddActionHandler(button.ButtonActionHandler):
+
     zope.component.adapts(
-             IAddForm,
-             zope.interface.Interface,
-             ITokenRolesProviding,
-             button.ButtonAction)
+        IAddForm,
+        zope.interface.Interface,
+        ITokenRolesProviding,
+        button.ButtonAction)
 
     def __call__(self):
         if self.action.name == 'form.buttons.cancel':

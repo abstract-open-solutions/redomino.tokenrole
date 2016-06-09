@@ -38,7 +38,7 @@ class TokenRolesAnnotateAdapter(object):
 
     def __init__(self, context):
         self.annotations = IAnnotations(context).setdefault(ANNOTATIONS_KEY,
-                                                           PersistentDict())
+                                                            PersistentDict())
 
     @apply
     def token_dict():
@@ -76,7 +76,7 @@ class TokenInfoSchema(object):
             return self.annotation.token_dict.get(self.token_id, {}).get('token_end')
 
         def setter(self, value):
-            if not self.token_id in self.annotation.token_dict:
+            if self.token_id not in self.annotation.token_dict:
                 self.annotation.token_dict[self.token_id] = PersistentDict()
             self.annotation.token_dict[self.token_id]['token_end'] = value
         return property(getter, setter)
@@ -87,12 +87,12 @@ class TokenInfoSchema(object):
             return self.annotation.token_dict.get(self.token_id, {}).get('token_roles')
 
         def setter(self, value):
-            if not self.token_id in self.annotation.token_dict:
+            if self.token_id not in self.annotation.token_dict:
                 self.annotation.token_dict[self.token_id] = PersistentDict()
             self.annotation.token_dict[self.token_id]['token_roles'] = value
         return property(getter, setter)
 
-        
+
 class TokenRolesLocalRolesProviderAdapter(object):
     implements(ILocalRoleProvider)
 
@@ -109,11 +109,11 @@ class TokenRolesLocalRolesProviderAdapter(object):
             token = request.cookies.get('token', None)
 
         tr_annotate = ITokenRolesAnnotate(self.context, None)
-        if tr_annotate and tr_annotate.token_dict.has_key(token):
+        if tr_annotate and token in tr_annotate.token_dict:
             expire_date = tr_annotate.token_dict[token].get('token_end')
             roles_to_assign = tr_annotate.token_dict[token].get('token_roles', ('Reader', ))
             if expire_date.replace(tzinfo=None) > datetime.now():
-                if not request.cookies.has_key('token'):
+                if token not in request.cookies:
                     physical_path = self.context.getPhysicalPath()
                     # Is there a better method for calculate the url_path?
                     url_path = '/' + '/'.join(request.physicalPathToVirtualPath(physical_path))
