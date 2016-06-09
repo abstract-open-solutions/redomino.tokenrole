@@ -11,7 +11,7 @@ env:
   - PLONE_VERSION=5.0
 before_install:
   - sed -ie "s#travis-5.x.cfg#travis-$PLONE_VERSION.x.cfg#" travis.cfg
-  - sed -ie "s#5.0.x#$PLONE_VERSION.x#" buildout.cfg
+  - sed -ie "s#5.0-latest#$PLONE_VERSION-latest#" buildout.cfg
   - mkdir -p $HOME/buildout-cache/{eggs,downloads}
   - mkdir $HOME/.buildout
   - echo "[buildout]" > $HOME/.buildout/default.cfg
