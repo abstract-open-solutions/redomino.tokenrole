@@ -36,7 +36,6 @@ from Products.statusmessages.interfaces import IStatusMessage
 
 from redomino.tokenrole import tokenroleMessageFactory as _
 from redomino.tokenrole.browser.interfaces import ITokenSendForm
-from redomino.tokenrole.interfaces import ITokenRolesAnnotate
 
 
 class TokenSendForm(form.Form):
@@ -67,7 +66,7 @@ class TokenSendForm(form.Form):
             self.status = _('token_role_send_ko', default=u'An error has occurred')
             return
 
-        #do something usefull, here we send the mail and
+        # do something usefull, here we send the mail and
         # set the status message
         self.status = self.send_mail(data)
 
@@ -113,8 +112,7 @@ class TokenSendForm(form.Form):
             for email_recipient in email_list:
                 mailhost.secureSend(message, email_recipient, from_address,
                                     subject=subject,
-                                    charset=email_charset, debug=False,
-                                   )
+                                    charset=email_charset, debug=False)
         except (MailHostError, SMTPException):
             return _('token_role_send_ko_mail', default=u'Mail error')
         except Exception:

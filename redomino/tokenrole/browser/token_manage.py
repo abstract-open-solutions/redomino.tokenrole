@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2011 Redomino srl (http://redomino.com)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -37,7 +38,6 @@ from Products.statusmessages.interfaces import IStatusMessage
 from redomino.tokenrole import tokenroleMessageFactory as _
 from redomino.tokenrole.interfaces import ITokenRolesAnnotate
 from redomino.tokenrole.interfaces import ITokenInfoSchema
-from redomino.tokenrole.config import DEFAULT_TOKEN_DAYS
 from redomino.tokenrole.utils import make_uuid
 from redomino.tokenrole.vocabularies import RolesFactory
 
@@ -211,7 +211,7 @@ class TokenDeleteForm(form.Form):
 
         context = self.getContent()
         tr_annotate = ITokenRolesAnnotate(context)
-        if tr_annotate.token_dict.has_key(data['token_id']):
+        if data['token_id'] in tr_annotate.token_dict:
             del tr_annotate.token_dict[data['token_id']]
 
         self.status = _(u'delete_success', default=u"Token removed")

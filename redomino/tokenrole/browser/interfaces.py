@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2011 Redomino srl (http://redomino.com)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -25,14 +26,16 @@ from redomino.tokenrole import tokenroleMessageFactory as _
 class ITokenSendForm(Interface):
     """ Form invio token ad una lista di email """
 
-    token_id = schema.ASCIILine(title=_(u'label_tokenrole_token_id', default=u'Token id'),
-                                description=_(u'help_tokenrole_token_id', default=u'This token is going to be distributed.'),
-                                required=True,
-                               )
-    subject = schema.TextLine(title=_(u'label_tokenrole_subject', default=u'Subject'),
-                              description=_(u'help_tokenrole_subject', default=u'Please enter the subject of the message you want to send.'),
-                              required=True,
-                             )
+    token_id = schema.ASCIILine(title=_(u'label_tokenrole_token_id',
+                                        default=u'Token id'),
+                                description=_(u'help_tokenrole_token_id',
+                                              default=u'This token is going to be distributed.'),
+                                required=True)
+    subject = schema.TextLine(title=_(u'label_tokenrole_subject',
+                                      default=u'Subject'),
+                              description=_(u'help_tokenrole_subject',
+                                            default=u'Please enter the subject of the message you want to send.'),
+                              required=True)
     text = schema.Text(title=_(u'label_tokenrole_text', default=u'Email body message'),
                        description=_(u'help_tokenrole_text', default=u"Please enter here the message you want to send. Please, do not remove ${date} and ${url} tokens or the email won't be complete."),
                        default=_(u"Please replace this text with your own message, but do not change under the next line.\n-----------------\nDate: ${date}s\nUrl: ${url}s"),
