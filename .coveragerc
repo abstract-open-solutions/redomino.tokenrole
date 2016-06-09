@@ -1,0 +1,6 @@
+[report]
+include =
+    src/redomino/*
+omit =
+    */test*
+    */upgrades/*
