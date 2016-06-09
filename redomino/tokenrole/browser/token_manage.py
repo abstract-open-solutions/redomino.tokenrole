@@ -100,14 +100,11 @@ class TokenAddForm(form.AddForm):
     def updateWidgets(self):
         super(TokenAddForm, self).updateWidgets()
         self.widgets['token_id'].value = make_uuid(self.getContent().getId())
-
-        end_date = datetime.datetime.now() + datetime.timedelta(DEFAULT_TOKEN_DAYS)
-        try:
-            delta = self.context.REQUEST.get('t', None)
+        delta = self.request.get('t')
+        if delta:
             delta_dt = datetime.datetime.fromtimestamp(float(delta))
-            self.widgets['token_end'].value = (delta_dt.year, delta_dt.month, delta_dt.day, delta_dt.hour, delta_dt.minute)
-        except:
-            self.widgets['token_end'].value = (end_date.year, end_date.month, end_date.day, 0, 0)
+            # '2000-10-30 15:40'
+            self.widgets['token_end'].value = delta_dt.strftime('%Y-%m-%d %H:%M')
 
     def createAndAdd(self, data):
         context = self.getContent()

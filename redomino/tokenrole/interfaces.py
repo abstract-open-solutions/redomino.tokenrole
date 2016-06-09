@@ -16,6 +16,7 @@
 # 02111-1307, USA.
 
 
+import datetime
 from zope.interface import Interface, Attribute
 from zope.annotation.interfaces import IAttributeAnnotatable
 from zope.schema import TextLine
@@ -24,11 +25,15 @@ from zope.schema import Choice
 from zope.schema import List
 
 from redomino.tokenrole import tokenroleMessageFactory as _
+from redomino.tokenrole.config import DEFAULT_TOKEN_DAYS
 
 class ITokenRolesProviding(IAttributeAnnotatable):
     """Mark objects able to dispatch 'token' roles, and therefor annotatable
     """
-    
+
+def tokenEndDefaultValue():
+    return datetime.datetime.now() + datetime.timedelta(days=DEFAULT_TOKEN_DAYS)
+
 class ITokenInfoSchema(Interface):
     """info used to manage the token
     """
@@ -41,6 +46,7 @@ class ITokenInfoSchema(Interface):
     token_end = Datetime(
                     title=_(u'label_token_validity', default=u'Token expiration date'),
                     description=_(u'help_token_validity', default=u"From this date this token will be useless"),
+                    defaultFactory=tokenEndDefaultValue,
                     required=True)
 
     token_roles= List(title=_(u'label_roles', default=u'Roles'),
