@@ -19,7 +19,4 @@ from Products.validation import validation
 
 
 def isEmail(value):
-    if validation.validatorFor('isEmail')(value) == 1:
-        return True
-    else:
-        return False
+    return(validation.validatorFor('isEmail')(value) == 1)

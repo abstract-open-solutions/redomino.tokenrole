@@ -25,6 +25,7 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import login
 from plone.app.testing import setRoles
+from plone.tesing import z2
 
 
 class RedominoPolicy(PloneSandboxLayer):
@@ -34,6 +35,7 @@ class RedominoPolicy(PloneSandboxLayer):
         # Load ZCML
         import redomino.tokenrole
         self.loadZCML(package=redomino.tokenrole)
+        z2.installProduct(app, 'redomino.tokenrole')
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'redomino.tokenrole:default')

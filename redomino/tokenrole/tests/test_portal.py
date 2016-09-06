@@ -15,8 +15,9 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
 
-import unittest2 as unittest
+import unittest
 from redomino.tokenrole.testing import REDOMINO_TOKENROLE_INTEGRATION_TESTING
+from redomino.tokenrole.validators import isEmail
 
 
 class TestPortal(unittest.TestCase):
@@ -39,3 +40,10 @@ class TestPortal(unittest.TestCase):
         portal = self.layer['portal']
         portal_actions = portal.portal_actions
         self.assertTrue('manage_tokenrole' in portal_actions.object.objectIds())
+
+    def test_validator_valid_email(self):
+        self.assertTrue(isEmail('info@example.org'))
+
+
+    def test_validator_valid_email(self):
+        self.assertFalse(isEmail('info'))
