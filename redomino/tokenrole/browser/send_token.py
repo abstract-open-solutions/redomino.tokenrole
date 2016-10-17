@@ -33,6 +33,7 @@ from Products.MailHost.MailHost import MailHostError
 from Products.CMFPlone.utils import safe_unicode
 from Products.CMFCore.utils import getToolByName
 from Products.statusmessages.interfaces import IStatusMessage
+from Products.ATContentTypes.interfaces.folder import IATBTreeFolder
 
 from redomino.tokenrole import tokenroleMessageFactory as _
 from redomino.tokenrole.browser.interfaces import ITokenSendForm
@@ -47,10 +48,10 @@ class TokenSendForm(form.Form):
     label = _('label_send_form', default=u'Send token form')
     successMessage = _('data_saved', default='Data successfully updated.')
     noChangesMessage = _('no_changes', default='No changes were applied.')
-    
+
     # Defining the fields. You can add fields together.
-    fields = field.Fields(TextLine(__name__='token_display', 
-                                   title=ITokenSendForm['token_id'].title, 
+    fields = field.Fields(TextLine(__name__='token_display',
+                                   title=ITokenSendForm['token_id'].title,
                                    description=ITokenSendForm['token_id'].description)) + field.Fields(ITokenSendForm)
     fields['token_id'].mode = HIDDEN_MODE
     fields['token_display'].mode = DISPLAY_MODE
@@ -96,10 +97,12 @@ class TokenSendForm(form.Form):
         text = safe_unicode(data['text'])
         token_id = data['token_id']
         url = "%s?token=%s" % (context.absolute_url(), token_id)
+        if IATBTreeFolder.providedBy(context):
+            url = "%s/private_token_listing?token=%s" % (context.absolute_url(), token_id)
 
         email_charset = portal.getProperty('email_charset')
         from_address = portal.getProperty('email_from_address')
-        
+
 #        tr_annotate = ITokenRolesAnnotate(context)
 #        end_date = context.toLocalizedTime(tr_annotate.token_dict[token_id]['token_end'])
         util = getToolByName(self.context, 'translation_service')
@@ -125,5 +128,3 @@ class TokenSendForm(form.Form):
 
 # wrap the form with plone.app.z3cform's Form wrapper
 TokenSendFormView = layout.wrap_form(TokenSendForm)
-
-

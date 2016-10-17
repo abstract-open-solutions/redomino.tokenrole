@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+
+<body>
+
+<metal:content-core fill-slot="content-core">
+<div id="private-listing" metal:define-macro="content-core">
+    <metal:listingmacro define-macro="listing">
+        <tal:foldercontents define="contentFilter contentFilter|request/contentFilter|nothing;
+    	                    contentFilter python:contentFilter and dict(contentFilter) or {};
+                            limit_display limit_display|request/limit_display|nothing;
+                            limit_display python:limit_display and int(limit_display) or None;
+                            more_url more_url|request/more_url|string:folder_contents;
+                            is_a_topic python:context.portal_type=='Topic';
+                            folderContents folderContents|nothing; folderContents python:folderContents or is_a_topic and view.privateQueryCatalog(batch=True, **contentFilter) or view.private_listing(contentFilter, batch=True, b_size=limit_display or 100);
+                            site_properties context/portal_properties/site_properties;
+                            use_view_action site_properties/typesUseViewActionInListings|python:();
+                            Batch python:modules['Products.CMFPlone'].Batch;
+                            b_start python:request.get('b_start', 0);
+                            batch python:isinstance(folderContents, Batch) and folderContents or Batch(folderContents, limit_display or 100, int(b_start), orphan=1);
+                            isAnon context/@@plone_portal_state/anonymous;
+                            normalizeString nocall: context/plone_utils/normalizeString;
+                            toLocalizedTime nocall: context/@@plone/toLocalizedTime;
+                            show_about python:not isAnon or site_properties.allowAnonymousViewAbout;
+                            navigation_root_url context/@@plone_portal_state/navigation_root_url;
+                            pas_member context/@@pas_member;
+                            plone_view context/@@plone;">
+
+        <tal:listing condition="batch">
+            <dl metal:define-slot="entries">
+                <metal:block define-macro="entries" extend-macro="context/folder_listing/macros/entries"/>
+            </dl>
+        </tal:listing>
+
+        </tal:foldercontents>
+
+    </metal:listingmacro>
+</div>
+</metal:content-core>
+
+</body>
+</html>

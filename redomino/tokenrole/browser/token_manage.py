@@ -33,6 +33,7 @@ from plone.app.z3cform import layout
 from Products.CMFCore.utils import getToolByName
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
+from Products.ATContentTypes.interfaces.folder import IATBTreeFolder
 
 from redomino.tokenrole import tokenroleMessageFactory as _
 from redomino.tokenrole.interfaces import ITokenRolesAnnotate
@@ -44,10 +45,13 @@ from redomino.tokenrole.vocabularies import RolesFactory
 
 class TokenManageView(BrowserView):
 
+    def on_folder(self):
+        return IATBTreeFolder.providedBy(self.context)
+
     def tokens_data(self):
         tr_annotate = ITokenRolesAnnotate(self.context)
         return tr_annotate.token_dict
-        
+
     def token_ids(self):
         tr_annotate = ITokenRolesAnnotate(self.context)
         token_dict = tr_annotate.token_dict
@@ -152,7 +156,7 @@ class TokenEditForm(form.EditForm):
     def nextURL(self):
         context = self.getContent()
         data, errors = self.extractData()
-        return "%s/@@token_manage" % (context.absolute_url()) 
+        return "%s/@@token_manage" % (context.absolute_url())
 
     @button.buttonAndHandler(_(u'modify_token', default=u"Modify token"), name='apply')
     def handleApply(self, action):
@@ -191,7 +195,7 @@ class TokenDeleteForm(form.Form):
     label = _(u"heading_delete_token", default="TokenRole: Delete token")
     successMessage = _('data_saved', default='Data successfully updated.')
     noChangesMessage = _('no_changes', default='No changes were applied.')
-    
+
     # Defining the fields. You can add fields together.
     fields = field.Fields(TextLine(__name__='token_display',
                                    title=ITokenInfoSchema['token_id'].title,
@@ -203,11 +207,12 @@ class TokenDeleteForm(form.Form):
     def updateWidgets(self):
         super(TokenDeleteForm, self).updateWidgets()
         self.widgets['token_display'].value = self.request.get('form.widgets.token_id')
+        self.widgets['token_id'].value = self.widgets['token_display'].value
 
     def nextURL(self):
         context = self.getContent()
         data, errors = self.extractData()
-        return "%s/@@token_manage" % (context.absolute_url()) 
+        return "%s/@@token_manage" % (context.absolute_url())
 
     # Handler for the submit action
     @button.buttonAndHandler(_(u'delete_token', default=u'Delete token'), name='delete')
@@ -234,4 +239,3 @@ class TokenDeleteForm(form.Form):
 
 
 TokenDeleteFormView = layout.wrap_form(TokenDeleteForm)
-
