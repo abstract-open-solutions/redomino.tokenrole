@@ -100,7 +100,7 @@ class TokenRole(BasePlugin):
     def authenticateCredentials(self, credentials):
         if credentials.has_key('login'):
             if (credentials.get('extractor', None) != 'credentials_basic_auth'):
-                if credentials.get('login') and (not credentials:
+                if credentials.get('login'):
                     return None
         tokenrole = credentials.get('TokenRole', None)
         if not tokenrole:
