@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
-
+import base64
 from datetime import datetime
 from persistent.dict import PersistentDict
 
@@ -86,8 +86,6 @@ class TokenInfoSchema(object):
             self.setter('token_roles', value)
         return property(getter, setter)
 
-        
-        
 
 class TokenRolesLocalRolesProviderAdapter(object):
     implements(ILocalRoleProvider)
@@ -99,23 +97,37 @@ class TokenRolesLocalRolesProviderAdapter(object):
         """Returns the roles for the given principal in context"""
         request = self.context.REQUEST
         response = request.RESPONSE
+        parent = self.context
 
         token = request.get('token', None)
         if not token:
             token = request.cookies.get('token', None)
 
+        if '|' in token:
+            token = token.split('|')[0]
+
         tr_annotate = ITokenRolesAnnotate(self.context, None)
+        if tr_annotate and (not tr_annotate.token_dict.has_key(token)):
+            cookie = request.cookies.get('token', None)
+            if cookie and '|' in cookie:
+                path = base64.b64decode(cookie.split('|')[1])
+                parent = self.context.unrestrictedTraverse(path)
+                tr_annotate = ITokenRolesAnnotate(parent, None)
+
         if tr_annotate and tr_annotate.token_dict.has_key(token):
             expire_date = tr_annotate.token_dict[token].get('token_end')
             roles_to_assign = tr_annotate.token_dict[token].get('token_roles', ('Reader',))
             if expire_date.replace(tzinfo=None) > datetime.now():
                 if not request.cookies.has_key('token'):
-                    physical_path = self.context.getPhysicalPath()
+                    physical_path = parent.getPhysicalPath()
                     # Is there a better method for calculate the url_path?
                     url_path = '/' + '/'.join(request.physicalPathToVirtualPath(physical_path))
-                    response.setCookie(name='token', 
-                                       value=token, 
-                                       expires=dt2DT(expire_date).toZone('GMT').rfc822(), 
+                    response.setCookie(name='token',
+                                       value="{0}|{1}".format(
+                                            token,
+                                            base64.b64encode(url_path)
+                                       ),
+                                       expires=dt2DT(expire_date).toZone('GMT').rfc822(),
                                        path=url_path)
                 return roles_to_assign
         return ()
@@ -124,4 +136,3 @@ class TokenRolesLocalRolesProviderAdapter(object):
         """Returns all the local roles assigned in this context:
         (principal_id, [role1, role2])"""
         return ()
-

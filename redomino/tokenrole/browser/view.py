@@ -1,3 +1,4 @@
+import base64
 from AccessControl.unauthorized import Unauthorized
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.permissions import View
@@ -9,14 +10,31 @@ from redomino.tokenrole.interfaces import ITokenRolesAnnotate
 
 class PrivateTokenListingView(BrowserView):
 
-    def __call__(self):
+    def split_cookie(self):
         request = self.context.REQUEST
 
         token = request.get('token', None)
         if not token:
             token = request.cookies.get('token', None)
+        value = token.split('|')
+        if len(value) == 2:
+            return value
+        return value[0], None
+
+    def __call__(self):
+        request = self.context.REQUEST
+        token, path = self.split_cookie()
 
         tr_annotate = ITokenRolesAnnotate(self.context, None)
+        if tr_annotate and (not tr_annotate.token_dict.has_key(token)):
+            cookie = request.cookies.get('token', None)
+            if cookie and '|' in cookie:
+                path = cookie.split('|')[1]
+                if path:
+                    path = base64.b64decode(path)
+                    parent = self.context.unrestrictedTraverse(path)
+                    tr_annotate = ITokenRolesAnnotate(parent, None)
+
         if tr_annotate and tr_annotate.token_dict.has_key(token):
             return self.index()
         raise Unauthorized(self.__name__)

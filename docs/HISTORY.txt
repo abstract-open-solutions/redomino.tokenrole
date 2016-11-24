@@ -6,6 +6,8 @@ Changelog
 
 - add folder compatibility and a view with unrestricted query.
   [lucas]
+- add level token navigation
+  [lucas]
 
 
 0.10 (2013-10-15)

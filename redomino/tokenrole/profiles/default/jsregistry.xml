@@ -1,0 +1,5 @@
+<object name="portal_javascripts" meta_type="JavaScripts Registry">
+ <javascript authenticated="False" cacheable="True" compression="safe"
+    conditionalcomment="" cookable="True" enabled="on" expression=""
+    id="++resource++redomino.tokenrole.resources/tokenrole.js" inline="False"/>
+</object>
