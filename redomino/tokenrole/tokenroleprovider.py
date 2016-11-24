@@ -103,7 +103,7 @@ class TokenRolesLocalRolesProviderAdapter(object):
         if not token:
             token = request.cookies.get('token', None)
 
-        if '|' in token:
+        if token and '|' in token:
             token = token.split('|')[0]
 
         tr_annotate = ITokenRolesAnnotate(self.context, None)
