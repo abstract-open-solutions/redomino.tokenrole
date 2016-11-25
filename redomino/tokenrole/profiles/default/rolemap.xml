@@ -2,9 +2,9 @@
 <rolemap>
     <permissions>
         <permission name="Manage token role" acquire="True">
+            <role name="Editor" />
             <role name="Manager" />
             <role name="Site Administrator" />
         </permission>
     </permissions>
 </rolemap>
-
