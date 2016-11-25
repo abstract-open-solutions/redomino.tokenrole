@@ -29,6 +29,7 @@ from Products.ATContentTypes.utils import dt2DT
 from redomino.tokenrole.interfaces import ITokenRolesAnnotate
 from redomino.tokenrole.interfaces import ITokenInfoSchema
 from redomino.tokenrole.interfaces import ITokenRolesProviding
+from zope.component import getMultiAdapter
 
 ANNOTATIONS_KEY = 'redomino.tokenrole.tokenrole_annotations'
 
@@ -111,7 +112,11 @@ class TokenRolesLocalRolesProviderAdapter(object):
             cookie = request.cookies.get('token', None)
             if cookie and '|' in cookie:
                 path = base64.b64decode(cookie.split('|')[1])
-                parent = self.context.unrestrictedTraverse(path)
+                portal_state = getMultiAdapter((self.context, request),
+                    name=u'plone_portal_state')
+                navigation_root = portal_state.navigation_root()
+                parent = navigation_root.unrestrictedTraverse(path.replace(
+                    '/'.join(navigation_root.getPhysicalPath()), '')[1:])
                 tr_annotate = ITokenRolesAnnotate(parent, None)
 
         if tr_annotate and tr_annotate.token_dict.has_key(token):
