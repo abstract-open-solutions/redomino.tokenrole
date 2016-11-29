@@ -5,6 +5,7 @@ from Products.CMFCore.permissions import View
 from Products.CMFPlone.PloneBatch import Batch
 from Products.Five.browser import BrowserView
 from Products.ZCatalog.Lazy import LazyCat
+from zope.component import getMultiAdapter
 from redomino.tokenrole.interfaces import ITokenRolesAnnotate
 
 
@@ -32,7 +33,11 @@ class PrivateTokenListingView(BrowserView):
                 path = cookie.split('|')[1]
                 if path:
                     path = base64.b64decode(path)
-                    parent = self.context.unrestrictedTraverse(path)
+                    portal_state = getMultiAdapter((self.context, request),
+                        name=u'plone_portal_state')
+                    navigation_root = portal_state.navigation_root()
+                    parent = navigation_root.unrestrictedTraverse(path.replace(
+                        '/'.join(navigation_root.getPhysicalPath()), '')[1:])
                     tr_annotate = ITokenRolesAnnotate(parent, None)
 
         if tr_annotate and tr_annotate.token_dict.has_key(token):
