@@ -14,13 +14,14 @@ class PrivateTokenListingView(BrowserView):
     def split_cookie(self):
         request = self.context.REQUEST
 
-        token = request.get('token', None)
+        token = request.get('token', '')
         if not token:
-            token = request.cookies.get('token', None)
+            token = request.cookies.get('token', '')
+
         value = token.split('|')
         if len(value) == 2:
             return value
-        return value[0], None
+        return value[0], ''
 
     def __call__(self):
         request = self.context.REQUEST
@@ -28,17 +29,14 @@ class PrivateTokenListingView(BrowserView):
 
         tr_annotate = ITokenRolesAnnotate(self.context, None)
         if tr_annotate and (not tr_annotate.token_dict.has_key(token)):
-            cookie = request.cookies.get('token', None)
-            if cookie and '|' in cookie:
-                path = cookie.split('|')[1]
-                if path:
-                    path = base64.b64decode(path)
-                    portal_state = getMultiAdapter((self.context, request),
-                        name=u'plone_portal_state')
-                    navigation_root = portal_state.navigation_root()
-                    parent = navigation_root.unrestrictedTraverse(path.replace(
-                        '/'.join(navigation_root.getPhysicalPath()), '')[1:])
-                    tr_annotate = ITokenRolesAnnotate(parent, None)
+            if path:
+                path = base64.b64decode(path)
+                portal_state = getMultiAdapter(
+                    (self.context, request), name=u'plone_portal_state')
+                navigation_root = portal_state.navigation_root()
+                parent = navigation_root.unrestrictedTraverse(path.replace(
+                    '/'.join(navigation_root.getPhysicalPath()), '')[1:])
+                tr_annotate = ITokenRolesAnnotate(parent, None)
 
         if tr_annotate and tr_annotate.token_dict.has_key(token):
             return self.index()
