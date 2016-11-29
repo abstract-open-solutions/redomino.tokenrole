@@ -5,11 +5,16 @@ from Products.CMFCore.permissions import View
 from Products.CMFPlone.PloneBatch import Batch
 from Products.Five.browser import BrowserView
 from Products.ZCatalog.Lazy import LazyCat
+from zope.security import checkPermission
 from zope.component import getMultiAdapter
 from redomino.tokenrole.interfaces import ITokenRolesAnnotate
 
 
 class PrivateTokenListingView(BrowserView):
+
+    @property
+    def canView(self):
+        return checkPermission('zope2.View', self.context)
 
     def split_cookie(self):
         request = self.context.REQUEST
@@ -38,7 +43,7 @@ class PrivateTokenListingView(BrowserView):
                     '/'.join(navigation_root.getPhysicalPath()), '')[1:])
                 tr_annotate = ITokenRolesAnnotate(parent, None)
 
-        if tr_annotate and tr_annotate.token_dict.has_key(token):
+        if self.canView or (tr_annotate and tr_annotate.token_dict.has_key(token)):
             return self.index()
         raise Unauthorized(self.__name__)
 
