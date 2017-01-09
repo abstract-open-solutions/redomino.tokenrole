@@ -1,7 +1,7 @@
 import os
 from setuptools import setup, find_packages
 
-version = '0.10.uniud'
+version = '0.11.uniud'
 
 tests_require = ['plone.app.testing']
 

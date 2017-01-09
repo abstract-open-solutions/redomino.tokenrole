@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.10.uniudine (unreleased)
------------------
+0.11.uniudine (2017-01-09)
+--------------------------
 
 - add folder compatibility and a view with unrestricted query.
   [lucas]
