@@ -97,26 +97,30 @@
                                            i18n:name="location">Oslo</span>,
                                 </span>
                                 <tal:byline condition="show_about">
+
+                                    <tal:comment tal:replace="string:">
                                     &mdash;
 
-                                    <tal:name tal:condition="item_creator"
-                                        tal:define="author python:pas_member.info(item_creator);
-                                                    creator_short_form author/username;
-                                                    creator_long_form string:?author=${author/username};
-                                                    creator_is_openid python:'/' in creator_short_form;
-                                                    creator_id python:(creator_short_form, creator_long_form)[creator_is_openid];">
-                                      <span i18n:translate="label_by_author">
-                                        by
-                                      <a href="#"
-                                         tal:attributes="href string:${navigation_root_url}/author/${item_creator}"
-                                         tal:content="author/name_or_id"
-                                         tal:omit-tag="not:author"
-                                         i18n:name="author">
-                                        Bob Dobalina
-                                      </a>
-                                      </span>
+                                      <tal:name tal:condition="item_creator"
+                                          tal:define="author python:pas_member.info(item_creator);
+                                                      creator_short_form author/username;
+                                                      creator_long_form string:?author=${author/username};
+                                                      creator_is_openid python:'/' in creator_short_form;
+                                                      creator_id python:(creator_short_form, creator_long_form)[creator_is_openid];">
+                                        <span i18n:translate="label_by_author">
+                                          by
+                                        <a href="#"
+                                           tal:attributes="href string:${navigation_root_url}/author/${item_creator}"
+                                           tal:content="author/name_or_id"
+                                           tal:omit-tag="not:author"
+                                           i18n:name="author">
+                                          Bob Dobalina
+                                        </a>
+                                        </span>
 
-                                    </tal:name>
+                                      </tal:name>
+
+                                    </tal:comment>
 
                                     <tal:modified condition="python: item_type != 'Event'">
                                         &mdash;

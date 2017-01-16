@@ -8,6 +8,8 @@ Changelog
   [lucas]
 - add level token navigation
   [lucas]
+- omit created - #4069
+  [lucas]
 
 
 0.10 (2013-10-15)
